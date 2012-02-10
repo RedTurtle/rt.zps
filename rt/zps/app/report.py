@@ -1,50 +1,5 @@
 # -*- coding: utf-8 -*-
-import psutil, sys, getopt
-
-__usage__ = """
-USAGE:
-  zps
-  zps --help
-  zps --pid 1111
-  zps --port 8080
-""".lstrip()
-
-__doc__ = ("""
-zps - report a snapshot of the current zope processes.
-
-%s
-""" % __usage__).lstrip()
-
-PID_ERROR = "pid value must be an integer number\n\n" + __doc__
-REPORT_TEMPLATE=''
-def onerror(msg):
-    """
-    Outputs msg and then exits
-    """
-    sys.stderr.write(msg)
-    return sys.exit()
-
-def checkopt():
-    """
-    Checking command line options
-    """
-    flags={'pid': 0, 'port': ''}    
-    opt_short=''
-    opt_long=['pid=', 'port=']
-    try:
-        opts, args = getopt.gnu_getopt(sys.argv[1:], opt_short, opt_long)
-    except getopt.GetoptError, e:
-        onerror("ERROR: %s\n\n%s"%(e, __usage__))
-    for opt, optarg in opts:
-        if opt == '--pid':
-            if not optarg.isdigit():
-                onerror(PID_ERROR)
-            flags['pid'] = int(optarg)
-        if opt == '--port':
-            flags['port'] = optarg
-    return opts, args, flags
-
-opts, args, flags = checkopt()
+from rt.zps.templates.report import REPORT_TEMPLATE
 
 class ZProcessReport(dict):
     '''
@@ -60,7 +15,7 @@ class ZProcessReport(dict):
         except AttributeError:
             return "Information not available on this platform"
     
-    def getzoncf(self):
+    def getzconf(self):
         """
         Try to the the zope configuration file
         """
@@ -118,37 +73,4 @@ class ZProcessReport(dict):
         """
         String representation of my process
         """
-        return REPORT_TEMPLATE % self
-        
-class ZProcessFinder(object):
-    """
-    This object finds out the processes run by zope
-    """
-    def __init__(self):
-        """
-        Initialize this object with flags
-        """
-        
-    @property    
-    def plist(self):
-        """
-        This is the list of processes this object is aware of
-        """
-        plist = []
-        for p in psutil.get_process_list():
-            pstr = "".join(p.cmdline)
-            if 'zope.conf' in pstr:
-                pdict = ZProcessReport(p)
-                if ((not flags['pid'] or (int(flags['pid']) == pdict['pid'])) 
-                    and flags['port'] in pdict['address']):
-                    plist.append(pdict)
-        return plist
-
-    def __str__(self):
-        """
-        Returns the output message with info about zope processes
-        """
-        plist = self.plist
-        if not plist:
-            return "No running zope instance found"
-        return "\n".join(map(str, plist))
+        return REPORT_TEMPLATE.substitute(self)
