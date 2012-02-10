@@ -1,0 +1,135 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+__usage__ = """
+USAGE:
+ zps
+ zps --help
+ zps --pid 1111
+ zps --port 8080
+""".lstrip()
+
+__doc__ = ("""
+zps - report a snapshot of the current zope processes.
+
+%s
+""" % __usage__).lstrip()
+
+PID_ERROR = "pid value must be an integer number\n\n" + __doc__
+
+REPORT_TEMPLATE = """
+CWD:      %(cwd)s
+User:     %(user)s
+PID:      %(pid)s
+Conf:     %(zconf)s
+Address:  %(address)s
+Memory:   %(memory)s
+""".lstrip()
+
+import psutil, sys, getopt
+
+def onerror(msg):
+    """
+    Outputs msg and then exits
+    """
+    sys.stderr.write(msg)
+    return sys.exit()
+
+def checkopt():
+    """
+    Checking command line options
+    """
+    flags={'pid': 0, 'port': ''}    
+    opt_short=''
+    opt_long=['pid=', 'port=']
+    try:
+        opts, args = getopt.gnu_getopt(sys.argv[1:], opt_short, opt_long)
+    except getopt.GetoptError, e:
+        onerror("ERROR: %s\n\n%s"%(e, __usage__))
+    for opt, optarg in opts:
+        if opt == '--pid':
+            if not optarg.isdigit():
+                onerror(PID_ERROR)
+            flags['pid'] = int(optarg)
+        if opt == '--port':
+            flags['port'] = optarg
+    return opts, args, flags
+
+opts, args, flags = checkopt()
+
+class ZProcessFinder(object):
+    """
+    This object finds out the processes run by zope
+    """
+    @property    
+    def plist(self):
+        """
+        This is the list of processes this object is aware of
+        """
+        plist = []
+        for p in psutil.get_process_list():
+            pstr = "".join(p.cmdline)
+            if 'zope.conf' in pstr:
+                pdict = self.process2dict(p)
+                if ((not flags['pid'] or (int(flags['pid']) == pdict['pid'])) 
+                    and flags['port'] in pdict['address']):
+                    plist.append(pdict)
+        return plist
+
+    def process2dict(self, process):
+        """
+        Convert's a process into a dict
+        """
+        pdict = {}
+        try:
+            pdict['cwd'] = process.getcwd()
+        except AttributeError:
+            pdict['cwd'] = "Information not available on this platform"
+        pdict['user'] = process.username
+        pdict['pid'] = process.pid
+        # Trying to get from the commandline the zope configuraton file
+        zconf = ''
+        for x in process.cmdline:
+            if 'zope.conf' in x:
+                zconf = x
+        pdict['zconf'] = zconf
+        # Getting the address information from the zope.configuraton file
+        pdict['address'] = ''
+        pdict['port-base'] = '0'
+        for line in file(zconf):
+            if 'address' in line:
+                line=line.strip()
+                if line.startswith('address'):
+                    pdict['address'] = line.replace('address', '').strip()
+            if 'port-base' in line:
+                line=line.strip()
+                if line.startswith('port-base'):
+                    pdict['port-base'] = line.replace('port-base', '').strip()
+        try:
+            if ':' in pdict['address']:
+                pdict['address'] = pdict['address'].split(':')[-1]
+            pdict['address'] = str(int(pdict['address'])
+                                   + int(pdict['port-base']))
+            pdict['port-base'] = '0'
+        except Exception, e:
+            print str(e)
+        pdict['memory'] = "%.2f%%" % process.get_memory_percent()
+        return pdict
+    
+    def report(self, process):
+        """
+        Reports informations about a process
+        """
+        return REPORT_TEMPLATE % process
+
+    def __call__(self):
+        """
+        Returns the output message with info about zope processes
+        """
+        plist = self.plist
+        if not plist:
+            return "No running zope instance found"
+        return "\n".join(map(self.report, plist))
+    
+if __name__=="__main__":
+    print ZProcessFinder()()

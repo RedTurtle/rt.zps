@@ -1,0 +1,22 @@
+Changelog
+=========
+
+0.9.2 (2010/06/10)
+------------------
+
+* Fixed documentation [keul]
+* Fixed computing addresses in the form of ip:port [alert]
+
+0.9.1 (2010/06/10)
+------------------
+
+* Fixed egg structure [fdelia]
+* pid option [alert, fdelia] 
+* port option [alert, fdelia]
+* Refactoring [alert]
+* Documentation [alert]
+
+0.9.0 (2010/05/05)
+------------------
+
+* Initial release [alert]
