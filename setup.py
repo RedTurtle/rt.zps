@@ -5,7 +5,7 @@ version = '0.9.3'
 setup(name='rt.zps',
       version=version,
       description="A zope processes inspector",
-      long_description=( file('README.txt').read() + '\n\n' +
+      long_description=( file('README.rst').read() + '\n\n' +
                          file('docs/HISTORY.txt').read()
                          ),
       classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
