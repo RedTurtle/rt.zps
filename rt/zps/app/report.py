@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+from psutil.error import AccessDenied
 from rt.zps.templates.report import REPORT_TEMPLATE
+
 
 class ZProcessReport(dict):
     '''
@@ -12,6 +14,8 @@ class ZProcessReport(dict):
         '''
         try:
             return self.process.getcwd()
+        except AccessDenied:
+            return "Access denied"
         except AttributeError:
             return "Information not available on this platform"
     
@@ -73,4 +77,7 @@ class ZProcessReport(dict):
         """
         String representation of my process
         """
-        return REPORT_TEMPLATE.substitute(self)
+        try:
+            return REPORT_TEMPLATE.substitute(self)
+        except:
+            return ''
