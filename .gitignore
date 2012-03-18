@@ -1,3 +1,8 @@
 .settings/
+bin
 build
-rt.zps.egg-info
+dist
+include
+lib
+*.egg-info
+.egg

@@ -7,6 +7,7 @@ Changelog
 * moved to github [ale-rt]
 * heavy refactoring [ale-rt]
 * added --grep flag [ale-rt]
+* tests [ale-rt]
 
 0.9.2 (2010/06/10)
 ------------------
