@@ -3,6 +3,7 @@ import psutil
 from rt.zps.app.report import ZProcessReport
 from rt.zps.streams import zprint
 
+
 class ZProcessFinder(object):
     """
     This object finds out the processes run by zope
@@ -12,17 +13,17 @@ class ZProcessFinder(object):
         Initialize this object with flags
         """
         self.flags = flags
-    
+
     def process_commandline(self, p):
         '''
         Returns the commandline of a psutil process
         '''
         return "".join(p.cmdline)
-    
+
     def p2dict(self, p):
         '''
         Checks if a process is one we care about
-        ''' 
+        '''
         pstr = self.process_commandline(p)
         if not 'zope.conf' in pstr:
             return
@@ -30,15 +31,15 @@ class ZProcessFinder(object):
         flags = self.flags
         if flags['grep'] and not flags['grep'] in pstr:
             return
-        
+
         pdict = ZProcessReport(p)
         if (flags['pid'] and int(flags['pid']) != pdict['pid']):
-            return 
+            return
         if flags['port'] and not flags['port'] in pdict['address']:
             return
         return pdict
-    
-    @property    
+
+    @property
     def plist(self):
         """
         This is the list of processes this object is aware of
@@ -59,7 +60,7 @@ class ZProcessFinder(object):
         if not plist:
             return "No running zope instance found"
         return "\n".join(map(str, plist))
-    
+
     def __call__(self):
         '''
         When called output it's string representation
