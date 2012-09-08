@@ -4,6 +4,7 @@ Changelog
 0.9.4 (unreleased)
 ------------------
 
+* fixing a crash when zope.conf file is not found [alert]
 * handling help flags, fixes #1, fixes #2 [alert]
 * cosmetic fixes [alert]
 
