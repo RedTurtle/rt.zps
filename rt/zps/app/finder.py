@@ -2,6 +2,7 @@
 import psutil
 from rt.zps.app.report import ZProcessReport
 from rt.zps.streams import zprint
+from rt.zps.templates.usage import USAGE
 
 
 class ZProcessFinder(object):
@@ -25,13 +26,12 @@ class ZProcessFinder(object):
         Checks if a process is one we care about
         '''
         pstr = self.process_commandline(p)
-        if not 'zope.conf' in pstr:
+        if not ('zope.conf' in pstr or 'zeo.conf' in pstr):
             return
 
         flags = self.flags
         if flags['grep'] and not flags['grep'] in pstr:
             return
-
         pdict = ZProcessReport(p)
         if (flags['pid'] and int(flags['pid']) != pdict['pid']):
             return
@@ -56,9 +56,11 @@ class ZProcessFinder(object):
         """
         Returns the output message with info about zope processes
         """
+        if self.flags['help']:
+            return USAGE
         plist = self.plist
         if not plist:
-            return "No running zope instance found"
+            return "No running zope instance found\n"
         return "\n".join(map(str, plist))
 
     def __call__(self):

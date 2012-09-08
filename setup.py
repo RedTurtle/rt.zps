@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '0.9.3'
+version = '0.9.4-unreleased'
 
 setup(name='rt.zps',
       version=version,
@@ -13,7 +13,7 @@ setup(name='rt.zps',
       keywords='',
       author='alert',
       author_email='alessandro.pisa@redturtle.it',
-      url='http://www.redturtle.it',
+      url='http://github.com/RedTurtle/rt.zps',
       license='GPL',
       packages=find_packages(exclude=['ez_setup', 'examples']),
       include_package_data=True,

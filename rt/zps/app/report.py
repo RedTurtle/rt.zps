@@ -5,6 +5,7 @@ from rt.zps.templates.report import REPORT_TEMPLATE
 from rt.zps.streams import zerror
 
 HTTP_SERVER_PATTERN = re.compile('<http-server>(.*)</http-server>', re.S)
+ZEO_SERVER_PATTERN = re.compile('<zeo>(.*)</zeo>', re.S)
 ADDRESS_PATTERN = re.compile('(\s*)address(\s*)(\d|\.|\:)+')
 PBASE_PATTERN = re.compile('(\s*)port-base(\s*)(\d)*')
 
@@ -53,7 +54,7 @@ class ZProcessReport(dict):
         Try to the the zope configuration file
         """
         for x in self.process.cmdline:
-            if 'zope.conf' in x:
+            if ('zope.conf' in x or 'zeo.conf' in x):
                 return x
         return ''
 

@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.9.4 (unreleased)
+------------------
+
+* handling help flags, fixes #1, fixes #2 [alert]
+* cosmetic fixes [alert]
+
 0.9.3 (2012/02/10)
 ------------------
 
