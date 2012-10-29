@@ -45,7 +45,7 @@ class ZProcessFinder(object):
         This is the list of processes this object is aware of
         """
         pdicts = []
-        for process in psutil.get_process_list():
+        for process in psutil.process_iter():
             pdict = self.p2dict(process)
             if pdict:
                 pdicts.append(pdict)
