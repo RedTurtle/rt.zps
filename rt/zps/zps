@@ -22,7 +22,7 @@ def checkopt():
         zfatalerror("ERROR: %s\n\n%s" % (e, USAGE))
 
     for opt, optarg in opts:
-        if opt in ('-h', '--help'):
+        if opt in ('-?', '-h', '--help'):
             flags['help'] = True
         elif opt == '--pid':
             if not optarg.isdigit():
