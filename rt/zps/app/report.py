@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import re
+from os.path import isfile
 from psutil.error import AccessDenied
 from rt.zps.templates.report import REPORT_TEMPLATE
 from rt.zps.streams import zerror
 
 HTTP_SERVER_PATTERN = re.compile('<http-server>(.*)</http-server>', re.S)
+ZEO_SERVER_PATTERN = re.compile('<zeo>(.*)</zeo>', re.S)
 ADDRESS_PATTERN = re.compile('(\s*)address(\s*)(\d|\.|\:)+')
 PBASE_PATTERN = re.compile('(\s*)port-base(\s*)(\d)*')
 
@@ -13,19 +15,31 @@ class ZProcessReport(dict):
     '''
     The Zope process report class
     '''
+    process = None
+    zconf = None
+
     def __init__(self, process):
         """
         This reports on a zope process
         """
         self.process = process
+        self.get_report_data()
+
+    def get_report_data(self):
+        '''
+        Reads process and zope configuration file data to fill the report
+        '''
+        zconf = self.getzconf()
+        if not zconf:
+            return
+        # Process data
         self['cwd'] = self.getcwd()
-        self['user'] = process.username
-        self['pid'] = process.pid
-        # Trying to get from the commandline the zope configuraton file
-        self['zconf'] = self.getzconf()
-        # Getting the address information from the zope.configuraton file
+        self['user'] = self.process.username
+        self['pid'] = self.process.pid
+        self['memory'] = "%.2f%%" % self.process.get_memory_percent()
+        # Zope data
+        self['zconf'] = zconf
         self['address'] = self.getport()
-        self['memory'] = "%.2f%%" % process.get_memory_percent()
 
     def __str__(self):
         """
@@ -53,9 +67,8 @@ class ZProcessReport(dict):
         Try to the the zope configuration file
         """
         for x in self.process.cmdline:
-            if 'zope.conf' in x:
+            if (('zope.conf' in x or 'zeo.conf' in x) and isfile(x)):
                 return x
-        return ''
 
     def lineparser(self, line, target):
         """

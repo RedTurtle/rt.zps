@@ -5,32 +5,26 @@ from rt.zps.streams import zfatalerror
 from rt.zps.templates.errors import PID_ERROR
 import getopt
 import sys
-
-__usage__ = """
-USAGE:
- zps
- zps --help
- zps --pid 1111
- zps --port 8080
- zps --grep plone
-""".lstrip()
+from rt.zps.templates.usage import USAGE
 
 
 def checkopt():
     """
     Checking command line options
     """
-    flags = {'pid': 0, 'port': '', 'grep': ''}
-    opt_short = ''
-    opt_long = ['grep=', 'pid=', 'port=']
+    flags = {'pid': 0, 'port': '', 'grep': '', 'help': False}
+    opt_short = 'h?'
+    opt_long = ['grep=', 'pid=', 'port=', 'help']
 
     try:
         opts, args = getopt.gnu_getopt(sys.argv[1:], opt_short, opt_long)
     except getopt.GetoptError, e:
-        zfatalerror("ERROR: %s\n\n%s" % (e, __usage__))
+        zfatalerror("ERROR: %s\n\n%s" % (e, USAGE))
 
     for opt, optarg in opts:
-        if opt == '--pid':
+        if opt in ('-?', '-h', '--help'):
+            flags['help'] = True
+        elif opt == '--pid':
             if not optarg.isdigit():
                 zfatalerror(PID_ERROR)
             flags['pid'] = int(optarg)

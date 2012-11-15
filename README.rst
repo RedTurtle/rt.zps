@@ -11,6 +11,10 @@ Installation
   easy_install psutil
   easy_install rt.zps
 
+Thanks to `@der_sven_ <http://twitter.com/der_sven_>`_ you can find up to date **debian packages** here:
+
+- http://www.apt.leftxs.org/
+
 Usage
 -----
 **zps** basic usage is straightforward: ::
@@ -113,3 +117,4 @@ Examples
   CWD:      /home/user/plone2
   User:     user
   Memory:   1.96%
+

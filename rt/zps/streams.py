@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from sys import exit, stdout, stderr
+from sys import stdout, stderr
 
 
 def zprint(text):
