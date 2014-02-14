@@ -5,11 +5,15 @@ version = '0.9.4'
 setup(name='rt.zps',
       version=version,
       description="A zope processes inspector",
-      long_description=(file('README.rst').read() +
+      long_description=(open('README.rst').read() +
                         '\n\n' +
-                        file('docs/HISTORY.txt').read()
+                        open('docs/HISTORY.txt').read()
                         ),
-      classifiers=[],
+      classifiers=[
+          'Programming Language :: Python',
+          'Programming Language :: Python :: 2',
+          'Programming Language :: Python :: 3',
+      ],
       keywords='',
       author='alert',
       author_email='alessandro.pisa@redturtle.it',

@@ -15,7 +15,7 @@ class TestZps(unittest.TestCase):
         '''
         pr = ZProcessReport(Process())
         # I add a couple of newlines for aestetich reasons
-        print "\n\n"
+        print ("\n\n")
         zprint(str(pr))
 
 if __name__ == '__main__':

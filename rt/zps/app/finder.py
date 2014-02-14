@@ -49,7 +49,7 @@ class ZProcessFinder(object):
             pdict = self.p2dict(process)
             if pdict:
                 pdicts.append(pdict)
-        pdicts.sort(key=lambda x:x['zconf'])
+        pdicts.sort(key=lambda x: x['zconf'])
         return pdicts
 
     def __str__(self):

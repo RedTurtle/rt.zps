@@ -1,7 +1,12 @@
 Changelog
 =========
 
-0.9.4 (unreleased)
+0.9.5 (unreleased)
+------------------
+
+* Python3 compatibility [alert]
+
+0.9.4 (2012-10-29)
 ------------------
 
 * fixing a crash when zope.conf file is not found [alert]

@@ -18,7 +18,7 @@ def checkopt():
 
     try:
         opts, args = getopt.gnu_getopt(sys.argv[1:], opt_short, opt_long)
-    except getopt.GetoptError, e:
+    except getopt.GetoptError as e:
         zfatalerror("ERROR: %s\n\n%s" % (e, USAGE))
 
     for opt, optarg in opts:
