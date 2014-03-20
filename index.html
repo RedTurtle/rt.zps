@@ -28,37 +28,128 @@
         </ul>
       </header>
       <section>
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <h1>
+<a name="zps---a-zope-processes-inspector" class="anchor" href="#zps---a-zope-processes-inspector"><span class="octicon octicon-link"></span></a>zps - A zope processes inspector</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p><strong>zps</strong> is addressed to the manager of zope and plone sites that want to get quickly
+get informations about the running instances of zope.</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<p>::</p>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<p>easy_install psutil
+  easy_install rt.zps</p>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<p>Thanks to <code>@der_sven_ &lt;http://twitter.com/der_sven_&gt;</code>_ you can find up to date <strong>debian packages</strong> here:</p>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+<ul>
+<li><a href="http://www.apt.leftxs.org/">http://www.apt.leftxs.org/</a></li>
+</ul><h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p><strong>zps</strong> basic usage is straightforward: ::</p>
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<p>[user@localhost]$zps
+  CWD:      /home/user/plone1
+  User:     user
+  PID:      1234
+  Conf:     /home/user/plone1/parts/instance/etc/zope.conf
+  Address:  8081
+  Memory:   1.96%</p>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<p>CWD:      /home/user/plone2
+  User:     user
+  PID:      12345
+  Conf:     /home/user/plone2/parts/instance/etc/zope.conf
+  Address:  8082
+  Memory:   1.96%</p>
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<p>The default action is to report, for each running instance of zope that it founds:</p>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<ul>
+<li>the Current Working Directory (CWD)</li>
+<li>the id of the user who is running the process</li>
+<li>the process PID</li>
+<li>the zope configuration file used by the instance</li>
+<li>the port (as calculated parsing the configuration file)</li>
+<li>the memory usage</li>
+</ul><p>To obtain usage information for <strong>zps</strong> just type zps --help, you will get this::</p>
+
+<p>[user@localhost]$zps
+  zps - report a snapshot of the current zope processes.</p>
+
+<p>USAGE:
+  zps
+  zps --help
+  zps --pid 1111
+  zps --port 8080
+  zps --grep plone</p>
+
+<p>As you can see <strong>zps</strong> can filter the results per <strong>zps</strong> or port, e.g., if calling <strong>zps</strong>
+returns the report about the two instances above, you will have the following::</p>
+
+<p>[user@localhost]$zps --pid 1234
+  CWD:      /home/user/plone1
+  User:     user
+  PID:      1234
+  Conf:     /home/user/plone1/parts/instance/etc/zope.conf
+  Address:  8081
+  Memory:   1.96%</p>
+
+<p>[user@localhost]$zps --port 8082
+  CWD:      /home/user/plone2
+  User:     user
+  PID:      12345
+  Conf:     /home/user/plone2/parts/instance/etc/zope.conf
+  Address:  8082
+  Memory:   1.96%</p>
+
+<p>In the case no instance is found, you will have::</p>
+
+<p>[user@localhost]$zps
+  No running zope instance found</p>
+
+<p><strong>TODO</strong>: filter output information
+It may happen that your server starts to be crowded. In that case the output of 
+<strong>zps</strong> is quickly parsable.
+Two command line flags should then be introduced:</p>
+
+<ul>
+<li>--show</li>
+<li>--hide</li>
+</ul><p><strong>TODO</strong>: colorize output
+It would be a nice feature to highlight with colors the memory usage. 
+If the output is in the range:</p>
+
+<ul>
+<li>0%-5%: green</li>
+<li>0%-10%: yellow</li>
+<li>10%-20%: red</li>
+<li>20%-100%: blinking red</li>
+</ul><h2>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<p>::</p>
+
+<p>[user@localhost]$zps --hide CWD,User,Memory
+  PID:      1234
+  Conf:     /home/user/plone1/parts/instance/etc/zope.conf
+  Address:  8081</p>
+
+<p>PID:      12345
+  Conf:     /home/user/plone2/parts/instance/etc/zope.conf
+  Address:  8082</p>
+
+<p>[user@localhost]$zps --hide CWD,User,Memory
+  CWD:      /home/user/plone1
+  User:     user
+  Memory:   1.96%</p>
+
+<p>CWD:      /home/user/plone2
+  User:     user
+  Memory:   1.96%</p>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/RedTurtle">RedTurtle</a></p>
