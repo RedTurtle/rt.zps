@@ -4,8 +4,7 @@ Changelog
 0.9.6 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+* psutils 2 compatibility [alert]
 
 0.9.5 (2014-02-14)
 ------------------
@@ -39,7 +38,7 @@ Changelog
 ------------------
 
 * Fixed egg structure [fdelia]
-* pid option [alert, fdelia] 
+* pid option [alert, fdelia]
 * port option [alert, fdelia]
 * Refactoring [alert]
 * Documentation [alert]

@@ -19,7 +19,10 @@ class ZProcessFinder(object):
         '''
         Returns the commandline of a psutil process
         '''
-        return "".join(p.cmdline)
+        cmdline = p.cmdline
+        if callable(cmdline):
+            cmdline = cmdline()
+        return "".join(cmdline)
 
     def p2dict(self, p):
         '''

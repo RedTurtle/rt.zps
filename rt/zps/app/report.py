@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 import re
 from os.path import isfile
-from psutil.error import AccessDenied
+try:
+    from psutil.error import AccessDenied
+except ImportError:
+    from psutil import AccessDenied
 from rt.zps.templates.report import REPORT_TEMPLATE
 from rt.zps.streams import zerror
 
