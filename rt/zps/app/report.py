@@ -37,7 +37,10 @@ class ZProcessReport(dict):
             return
         # Process data
         self['cwd'] = self.getcwd()
-        self['user'] = self.process.username
+        username = self.process.username
+        if callable(username):
+            username = username()
+        self['user'] = username
         self['pid'] = self.process.pid
         self['memory'] = "%.2f%%" % self.process.get_memory_percent()
         # Zope data
@@ -69,7 +72,10 @@ class ZProcessReport(dict):
         """
         Try to the the zope configuration file
         """
-        for x in self.process.cmdline:
+        cmdline = self.process.cmdline
+        if callable(cmdline):
+            cmdline = cmdline()
+        for x in cmdline:
             if (('zope.conf' in x or 'zeo.conf' in x) and isfile(x)):
                 return x
 
