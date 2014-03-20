@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '0.9.6.dev0'
+version = '0.9.6'
 
 setup(name='rt.zps',
       version=version,
