@@ -28,6 +28,17 @@ class ZProcessReport(dict):
         self.process = process
         self.get_report_data()
 
+    def memory_percent(self):
+        ''' Return process memory percent.
+        Tries to be compliant with every psutil version
+        '''
+        try:
+            memory = self.process.memory_percent()
+        except AttributeError:
+            # psutil < 2.0.0
+            memory = self.process.get_memory_percent()
+        return memory
+
     def get_report_data(self):
         '''
         Reads process and zope configuration file data to fill the report
@@ -42,7 +53,7 @@ class ZProcessReport(dict):
             username = username()
         self['user'] = username
         self['pid'] = self.process.pid
-        self['memory'] = "%.2f%%" % self.process.get_memory_percent()
+        self['memory'] = "%.2f%%" % self.memory_percent()
         # Zope data
         self['zconf'] = zconf
         self['address'] = self.getport()

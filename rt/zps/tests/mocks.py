@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
-from psutil.error import AccessDenied
 from rt.zps.tests import __path__ as zps_test_path
+try:
+    from psutil import AccessDenied
+except ImportError:
+    # psutil < 2.0.0
+    from psutil.error import AccessDenied
 
 
 class Process(object):
@@ -9,7 +13,7 @@ class Process(object):
     '''
     username = 'plone'
     pid = 1111
-    memory_percent = 1.23
+    fake_memory_percent = 1.23
     cwd = '/a/path'
 
     @property
@@ -24,7 +28,7 @@ class Process(object):
         '''
         Return a float
         '''
-        return self.memory_percent
+        return self.fake_memory_percent
 
     def getcwd(self):
         '''
