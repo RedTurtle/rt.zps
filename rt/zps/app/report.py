@@ -105,31 +105,34 @@ class ZProcessReport(dict):
         Tries to get the port of the running zope instance parsing the zope
         configuration file
         """
-        zconf = open(self['zconf']).read()
-        http_server = HTTP_SERVER_PATTERN.search(zconf)
+        zconf = open(self['zconf'])
+        http_server = HTTP_SERVER_PATTERN.search(zconf.read())
+        zconf.close()
 
-        if http_server:
-            address = ADDRESS_PATTERN.search(http_server.group(0))
-            if address:
-                address = self.lineparser(address.group(0), 'address')
-            else:
-                return "No address found"
-
-            pbase = PBASE_PATTERN.search(http_server.group(0))
-            if pbase:
-                pbase = int(self.lineparser(pbase.group(0), 'port-base'))
-            else:
-                pbase = 0
-        else:
+        if not http_server:
             return 'No http-server section found'
+
+        address = ADDRESS_PATTERN.search(http_server.group(0))
+        if address:
+            address = self.lineparser(address.group(0), 'address')
+        else:
+            return "No address found"
+
+        pbase = PBASE_PATTERN.search(http_server.group(0))
+        if pbase:
+            pbase = int(self.lineparser(pbase.group(0), 'port-base'))
+        else:
+            pbase = 0
 
         if ':' in address:
             host, port = address.split(':')
         else:
             host, port = '0.0.0.0', address
+
         try:
             port = str(int(port) + int(pbase))
         except Exception as e:
             zerror(str(e))
             return ''
+
         return ':'.join((host, port))
